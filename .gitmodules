@@ -1,0 +1,6 @@
+[submodule "front_bot_turnos"]
+	path = front_bot_turnos
+	url = https://github.com/MartinCiro/front_bot_turnos
+[submodule "scrapper_turnos"]
+	path = scrapper_turnos
+	url = https://github.com/MartinCiro/scrapper_turnos
