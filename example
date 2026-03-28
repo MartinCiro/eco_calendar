@@ -1,0 +1,7 @@
+USERS_ECO=Lista Usuarios
+PASSWDS_ECO=Lista pass
+HEADLESS=True or False
+TELEGRAM_TOKEN=Token de telegram
+TELEGRAM_CHAT=Id de chat
+DISPLAY=ventana opcional
+PYTHONUNBUFFERED=bufer opcional

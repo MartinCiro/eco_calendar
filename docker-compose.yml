@@ -1,0 +1,51 @@
+services:
+  angular-app:
+    build:
+      context: front_bot_turnos
+    container_name: front_turnos_prod
+    hostname: angular-turnos
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    networks:
+      - web-network
+
+  python_bot:
+    container_name: scrap_turnos_prod
+    build:
+      context: scrapper_turnos
+      dockerfile: scrapper_turnos/Dockerfile.dev
+    working_dir: /app
+    environment:
+      - USERS_ECO=${USERS_ECO}
+      - PASSWDS_ECO=${PASSWDS_ECO}
+      - HEADLESS=${HEADLESS}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT=${TELEGRAM_CHAT}
+      - DISPLAY=:${DISPLAY:-:0}
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-1}
+      
+    privileged: true
+
+    command: ["/bin/sh", "-c", "python main.py"]
+
+    restart: unless-stopped
+
+# Redes
+networks:
+  web-network:
+    driver: bridge
+    ipam:
+      driver: default

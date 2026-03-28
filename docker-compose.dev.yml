@@ -1,0 +1,37 @@
+services:
+  front_turnos_dev:
+    build:
+      context: front_bot_turnos
+      dockerfile: front_bot_turnos/Dockerfile.dev
+    container_name: front-turnos-dev
+    ports:
+      - "4300:4200"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.angular
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - NG_CLI_ANALYTICS=ci
+
+  python_bot:
+    container_name: scrapper_turnos
+    build:
+      context: scrapper_turnos
+      dockerfile: scrapper_turnos/Dockerfile
+    working_dir: /app
+    environment:
+      - USERS_ECO=${USERS_ECO}
+      - PASSWDS_ECO=${PASSWDS_ECO}
+      - HEADLESS=${HEADLESS}
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT=${TELEGRAM_CHAT}
+      - DISPLAY=:${DISPLAY:-:0}
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED:-1}
+      
+    privileged: true
+
+    command: ["/bin/sh", "-c", "python main.py"]
+
+    restart: unless-stopped
